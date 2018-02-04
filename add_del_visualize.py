@@ -5,11 +5,11 @@ import numpy as np
 from ipywidgets import interact, interactive, IntSlider
 from IPython.display import display
 
-fig = plt.figure(figsize=(6, 6))
-ax1 = plt.subplot(111, aspect='equal')
-q, = ax1.plot([10], [10], 'o', color='yellow')
-points = None
 
+points = None
+fig = None
+q = None
+ax1 = None
 
 def generatePoints(n, N):
     gen_points = {(randint(0, n), randint(0, n)) for i in range(N)}
@@ -29,14 +29,13 @@ def printPoints(fig, ax1, q, points):
     color = 'red'
     printPoints.prevEdges = ax1.triplot(points[:, 0], points[:, 1], tri.simplices.copy(), color=color)
     printPoints.prevPoints, = ax1.plot(points[:, 0], points[:, 1], 'o', color=color)
-    display(fig)
+    #display(fig)
     ax1.set_xlim(0, 10)
     ax1.set_ylim(0, 10)
 
 
 def foundAndDel(new_q):
     global points
-    #return False
     eps = 0.1
     for p in points:
         if abs(p[0] - new_q[0]) < eps and abs(p[1] - new_q[1]) < eps:
@@ -56,12 +55,16 @@ def onRelease(event):
     printPoints(fig, ax1, q, np.array(points))
     q, = ax1.plot([event.xdata], [event.ydata], 'o', color='yellow')
 
-    display(fig)
+    #display(fig)
 
 
 def visualize():
     global fig, q, ax1, points
-
+    
+    fig = plt.figure(figsize=(6, 4))
+    ax1 = plt.subplot(111, aspect='equal')
+    q, = ax1.plot([10], [10], 'o', color='yellow')
+    
     fig.canvas.mpl_connect('button_release_event', onRelease)
 
     printPoints.prevEdges = None
